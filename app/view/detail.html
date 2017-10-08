@@ -1,0 +1,33 @@
+<div class="container">
+    <div class="row mt-3">
+        <div class="col">
+            <h4 class="text-left">{{item.name}}</h4>
+        </div>
+        <div class="col">
+            <h4 class="text-right">{{item.lastTime}}</h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <img class="w-100" ng-src="{{item.img}}">
+        </div>
+    </div>
+    <div class="row my-2">
+        <div class="col">
+            <p class="text-justify">{{item.description}}</p>
+            <hr>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12">
+            <div class="media" ng-repeat="user in commentList" default-img>
+                <img class="d-flex mr-3 mb-3" src="" alt="{{user.name}}">
+                <canvas id="{{user.id}}" style="display:none"></canvas>
+                <div class="media-body">
+                    <h5 class="mt-0">{{user.name}}</h5>
+                    {{user.comment}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

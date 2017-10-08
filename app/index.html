@@ -6,15 +6,18 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>Home</title>
-    <link rel="stylesheet" href="css/bootstrap.min.css">
-    <script src="js/bootstrap.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.min.css">
     <script src="js/jquery-3.2.1.min.js"></script>
     <script src="js/popper.js"></script>
+    <script src="js/bootstrap.min.js"></script>
 </head>
-<body ng-app="myApp">
-   <h1>hello</h1>
+
+<body ng-app="myApp" class="bg-light">
+    <div ui-view="navbar"></div>
+    <div ui-view="content"></div>
 </body>
-    <script src="js/angular.min.js"></script>
-    <script src="js/angular-ui-router.min.js"></script>
-    <script src="app.js"></script>   
+<script src="js/angular.min.js"></script>
+<script src="js/angular-ui-router.min.js"></script>
+<script src="app.js"></script>
+
 </html>

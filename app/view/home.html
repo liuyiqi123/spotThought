@@ -1,0 +1,9 @@
+<h1>{{list}}</h1>
+<div class="card-columns">
+<div class="card text-white bg-dark rounded-0" ng-repeat="item in itemList" ui-sref="detail({itemID:item.id})">
+  <div class="card-body">
+    <h4 class="card-title">{{item.name}}</h4>
+     <p class="card-text"><small class="text-muted">{{item.lastTime}}</small></p>
+  </div>
+</div>
+</div>
