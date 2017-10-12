@@ -76,6 +76,18 @@ myApp.service('apiService', function ($http, $q) {
             });
         return d.promise;
     }
+    this.postComment = function (params) {
+        var d = $q.defer();
+        $http.post("mock/postComment.json", { id: params })
+            .success(function (response) {
+                d.resolve(response);
+            })
+            .error(function () {
+                alert(0)
+                d.reject("error");
+            });
+        return d.promise;
+    }
 
 }).controller('homeController', function ($scope, apiService, $rootScope, $stateParams) {
     $scope.logoText = 'USJ';
@@ -99,6 +111,10 @@ myApp.service('apiService', function ($http, $q) {
     }, function (data) {
         alert(data);
     });
+
+    $scope.commentModal = function () {
+
+    };
 }).directive('defaultImg', function () {
     return {
         restrict: 'A',
@@ -121,6 +137,35 @@ myApp.service('apiService', function ($http, $q) {
             context.textBaseline = "middle";
             context.fillText(name, fontSize, fontSize);
             element[0].children[0].setAttribute('src', canvas.toDataURL("image/png"));
+        }
+    };
+}).directive('formHandler', function (apiService, $timeout) {
+    return {
+        restrict: 'A',
+        link: function (scope, element) {
+            var targetModal = element.closest("#commentModals").find("#Modalshort");
+            var closeDelay = function () {
+                targetModal.modal("hide");
+            };
+            var randomGuest = "游客" + Math.floor(Math.random() * 10000);
+            element.find("#guestName")[0].setAttribute('placeholder', randomGuest);
+            element.closest("#ModalLong").find("#submit").on("click", function () {
+                apiService.postComment(scope.itemID).then(function (data) {
+                    if (data.status == "success") {
+                        var targetModal = element.closest("#commentModals").find("#Modalshort");
+                        element.closest("#commentModals").find("#messageInput").html(data.message);
+                        targetModal.modal('show');
+                        $timeout(closeDelay, 1000);
+                        element.closest("#ModalLong").modal('hide');
+                    } else {
+                        element.closest("#commentModals").find("#messageInput").html(data.message);
+                        targetModal.modal('show');
+                        $timeout(closeDelay, 1000);
+                    }
+                }, function (data) {
+                    alert(data);
+                });
+            });
         }
     };
 });
