@@ -3,7 +3,12 @@
         "id": 1,
         "name": "虎跳峡",
         "lastTime": "30min",
+        "progress": "90%",
         "description": "Oneday, he decided to transform this string to a new sequence. You need help him determine this transformation ",
-        "img": "img/pic.jpg"
+        "img": [
+            {"id":0,"img":"img/pic.jpg"},
+            {"id":1,"img":"img/pic.jpg"},
+            {"id":2,"img":"img/pic.jpg"}
+        ]
     }
 }

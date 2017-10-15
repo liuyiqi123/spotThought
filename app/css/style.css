@@ -3,3 +3,6 @@
     bottom:20%;
     right:20px;
 }
+.card-default .card-title{
+    text-shadow: 0 0 5px #727b84;
+}

@@ -40,6 +40,18 @@ myApp.run(function ($rootScope, $stateParams) {
 });
 
 myApp.service('apiService', function ($http, $q) {
+    this.getProject = function () {
+        var d = $q.defer();
+        $http.get("/spotThought/scenicController/getScenicInfo.do")
+            .success(function (response) {
+                d.resolve(response);
+            })
+            .error(function () {
+                alert(0)
+                d.reject("error");
+            });
+        return d.promise;
+    }
     this.getItemList = function () {
         var d = $q.defer();
         $http.get("mock/itemList.json")
@@ -90,26 +102,71 @@ myApp.service('apiService', function ($http, $q) {
     }
 
 }).controller('homeController', function ($scope, apiService, $rootScope, $stateParams) {
-    $scope.logoText = 'USJ';
+    apiService.getProject().then(function (data) {
+        $scope.logoText = data.name;
+    }, function (data) {
+        $scope.message = "Error: " + data.status + " " + data.statusText;
+    });
 
     apiService.getItemList().then(function (data) {
         $scope.itemList = data.itemList;
+        for (i in $scope.itemList) {
+            var item = $scope.itemList[i];
+            item.progressClass = progressFn(item.progress, false);
+            item.style = {
+                "background-image": "url(" + item.itemImg + ")",
+                "background-size": "cover"
+            };
+        }
+        $scope.isLoading = false;
     }, function (data) {
-        alert(data);
+        $scope.message = "Error: " + data.status + " " + data.statusText;
     });
+    $scope.isLoading = true;
+    $scope.loadingMsg = "加载中...";
+    $scope.defaultOrder = {
+        "progress": true,
+        "progressIcon": null,
+        "name": true,
+        "nameIcon": null,
+        "isDesc": "",
+        "orderParam": "name"
+    }
+
+    $scope.setOrder = function (param, $event) {
+        if ($event) { $event.stopPropagation() };
+        if (param == "progress") {
+            $scope.defaultOrder.isDesc = $scope.defaultOrder.progress ? "" : "desc";
+            $scope.defaultOrder.nameIcon = null;
+            $scope.defaultOrder.progress = !$scope.defaultOrder.progress;
+            $scope.defaultOrder.progressIcon = $scope.defaultOrder.progress ? "oi-arrow-bottom" : "oi-arrow-top";
+        } else if (param == "name") {
+            $scope.defaultOrder.isDesc = $scope.defaultOrder.name ? "" : "desc";
+            $scope.defaultOrder.progressIcon = null;
+            $scope.defaultOrder.name = !$scope.defaultOrder.name;
+            $scope.defaultOrder.nameIcon = $scope.defaultOrder.name ? "oi-arrow-bottom" : "oi-arrow-top";
+        } else {
+            return
+        }
+        $scope.defaultOrder.orderParam = param;
+    }
 
 }).controller('detailController', function ($scope, $stateParams, apiService) {
+    $scope.isLoading = true;
+    $scope.loadingMsg = "加载中...";
     $scope.itemID = $stateParams.itemID;
     apiService.getItemDetail($scope.itemID).then(function (data) {
         $scope.item = data.item;
+        $scope.item.badgeClass = progressFn($scope.item.progress, true);
     }, function (data) {
-        alert(data);
+        $scope.message = "Error: " + data.status + " " + data.statusText;;
     });
 
     apiService.getCommentList($scope.itemID).then(function (data) {
         $scope.commentList = data.commentList;
+        $scope.isLoading = false;
     }, function (data) {
-        alert(data);
+        $scope.message = "Error: " + data.status + " " + data.statusText;;
     });
 
     $scope.commentModal = function () {
@@ -139,6 +196,15 @@ myApp.service('apiService', function ($http, $q) {
             element[0].children[0].setAttribute('src', canvas.toDataURL("image/png"));
         }
     };
+}).directive('carouseImg', function () {
+    return {
+        restrict: 'A',
+        link: function (scope, element) {
+            element.carousel({
+                interval: 2000
+            });
+        }
+    };
 }).directive('formHandler', function (apiService, $timeout) {
     return {
         restrict: 'A',
@@ -163,9 +229,21 @@ myApp.service('apiService', function ($http, $q) {
                         $timeout(closeDelay, 1000);
                     }
                 }, function (data) {
-                    alert(data);
+                    $scope.message = "Error: " + data.status + " " + data.statusText;;
                 });
             });
         }
     };
 });
+
+function progressFn(progress, badge) {
+    var progressNum = parseInt(progress), progressClass = "";
+    if (progressNum >= 80) {
+        progressClass = badge ? "badge-danger" : "bg-danger";
+    } else if (progressNum >= 60) {
+        progressClass = badge ? "badge-warning" : "bg-warning";
+    } else {
+        progressClass = badge ? "badge-success" : "bg-success";
+    }
+    return progressClass;
+}

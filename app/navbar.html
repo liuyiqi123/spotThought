@@ -1,0 +1,19 @@
+<nav class="navbar navbar-dark bg-dark">
+    <a class="navbar-brand" ui-sref="home">
+            {{logoText}}
+        </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false"
+        aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item" ng-class="{active:activeItem=='home'}">
+                <a class="nav-link" ui-sref="home">主页</a>
+            </li>
+            <li class="nav-item" ng-class="{active:activeItem==item.id}" ng-repeat="item in itemList">
+                <a class="nav-link" ui-sref="detail({itemID:item.id})">{{item.name}}</a>
+            </li>
+        </ul>
+    </div>
+</nav>

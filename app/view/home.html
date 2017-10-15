@@ -1,9 +1,36 @@
-<h1>{{list}}</h1>
+<div class="row m-3" ng-show="isLoading">
+  <div class="col">
+      <p class="text-center">{{loadingMsg}}</p>
+  </div>
+</div>
+
+<div ng-show="!isLoading">
+<div class="row">
+  <div class="col">
+    <div class="m-3 float-right">
+      <div class="dropdown">
+        <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true"
+          aria-expanded="false">
+   排序
+  </button>
+        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenu2">
+          <button class="dropdown-item" type="button" ng-click="setOrder('progress',$event)">按排队时间 <span class="oi" ng-class="defaultOrder.progressIcon"></span></button>
+          <button class="dropdown-item" type="button" ng-click="setOrder('name',$event)">按名称 <span class="oi" ng-class="defaultOrder.nameIcon"></span></button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 <div class="card-columns">
-<div class="card text-white bg-dark rounded-0" ng-repeat="item in itemList" ui-sref="detail({itemID:item.id})">
-  <div class="card-body">
-    <h4 class="card-title">{{item.name}}</h4>
-     <p class="card-text"><small class="text-muted">{{item.lastTime}}</small></p>
+  <div class="card text-white bg-dark rounded-0 card-default" ng-repeat="item in itemList | orderBy:defaultOrder.orderParam:defaultOrder.isDesc" ui-sref="detail({itemID:item.id})" ng-style="item.style">
+    <div class="card-body">
+      <h4 class="card-title">{{item.name}}</h4>
+      <div class="progress">
+        <div class="progress-bar progress-bar-striped progress-bar-animated {{item.progressClass}}" role="progressbar" ng-style="{'width': item.progress}"
+          aria-valuenow="100" aria-valuemin="0" aria-valuemax="100"></div>
+      </div>
+        <p class="card-text"><span class="badge badge-secondary">{{item.lastTime}}</span></p>
+    </div>
   </div>
 </div>
 </div>
